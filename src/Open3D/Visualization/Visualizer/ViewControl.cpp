@@ -57,8 +57,8 @@ void ViewControl::SetViewMatrices(
     glViewport(0, 0, window_width_, window_height_);
     if (GetProjectionType() == ProjectionType::Perspective) {
         // Perspective projection
-        z_near_ = std::max(0.01 * bounding_box_.GetSize(),
-                           distance_ - 3.0 * bounding_box_.GetSize());
+        z_near_ = 0.01;//std::max(0.01 * bounding_box_.GetSize(),
+        //                    distance_ - 3.0 * bounding_box_.GetSize());
         z_far_ = distance_ + 3.0 * bounding_box_.GetSize();
         projection_matrix_ =
                 GLHelper::Perspective(field_of_view_, aspect_, z_near_, z_far_);
@@ -153,13 +153,21 @@ bool ViewControl::ConvertFromPinholeCameraParameters(
         const PinholeCameraParameters &parameters) {
     auto intrinsic = parameters.intrinsic_;
     auto extrinsic = parameters.extrinsic_;
+    // if (window_height_ <= 0 || window_width_ <= 0 ||
+    //     window_height_ != intrinsic.height_ ||
+    //     window_width_ != intrinsic.width_ ||
+    //     intrinsic.intrinsic_matrix_(0, 2) !=
+    //             (double)window_width_ / 2.0 - 0.5 ||
+    //     intrinsic.intrinsic_matrix_(1, 2) !=
+    //             (double)window_height_ / 2.0 - 0.5) {
+    //     PrintWarning(
+    //             "[ViewControl] ConvertFromPinholeCameraParameters() failed "
+    //             "because window height and width do not match.\n");
+    //     return false;
+    // }
     if (window_height_ <= 0 || window_width_ <= 0 ||
         window_height_ != intrinsic.height_ ||
-        window_width_ != intrinsic.width_ ||
-        intrinsic.intrinsic_matrix_(0, 2) !=
-                (double)window_width_ / 2.0 - 0.5 ||
-        intrinsic.intrinsic_matrix_(1, 2) !=
-                (double)window_height_ / 2.0 - 0.5) {
+        window_width_ != intrinsic.width_) {
         PrintWarning(
                 "[ViewControl] ConvertFromPinholeCameraParameters() failed "
                 "because window height and width do not match.\n");
